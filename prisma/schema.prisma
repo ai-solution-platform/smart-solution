@@ -1,0 +1,658 @@
+// Smart Website CMS - Prisma Schema
+// Thai Local Government Website Platform (เทศบาล/อบจ/อบต)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// TENANT (Multi-tenant support for multiple government organizations)
+// ============================================================================
+
+model Tenant {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  domain         String?  @unique
+  logo           String?
+  favicon        String?
+  primaryColor   String   @default("#1e40af")
+  secondaryColor String   @default("#1e3a5f")
+  accentColor    String   @default("#f59e0b")
+  fontFamily     String   @default("Prompt")
+  description    String?
+  address        String?
+  phone          String?
+  email          String?
+  fax            String?
+  socialFacebook String?
+  socialLine     String?
+  socialYoutube  String?
+  socialTiktok   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  users              User[]
+  menuItems          MenuItem[]
+  pages              Page[]
+  news               News[]
+  procurements       Procurement[]
+  banners            Banner[]
+  media              Media[]
+  galleries          Gallery[]
+  documents          Document[]
+  contactSubmissions ContactSubmission[]
+  complaints         Complaint[]
+  siteConfigs        SiteConfig[]
+  visitorLogs        VisitorLog[]
+  citizens           Citizen[]
+  citizenActivities  CitizenActivity[]
+  citizenConsents    CitizenConsent[]
+  notifications      Notification[]
+  notificationSubscriptions NotificationSubscription[]
+
+  @@index([slug])
+  @@index([domain])
+}
+
+// ============================================================================
+// USER (Authentication and authorization)
+// ============================================================================
+
+// Role values: SUPER_ADMIN, ADMIN, EDITOR, VIEWER
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      String    @default("VIEWER") // SUPER_ADMIN, ADMIN, EDITOR, VIEWER
+  tenantId  String
+  avatar    String?
+  lastLogin DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  tenant              Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pages               Page[]        @relation("PageAuthor")
+  news                News[]        @relation("NewsAuthor")
+  procurements        Procurement[] @relation("ProcurementAuthor")
+  documents           Document[]    @relation("DocumentAuthor")
+  uploadedMedia       Media[]       @relation("MediaUploader")
+  assignedComplaints  Complaint[]   @relation("ComplaintAssignee")
+
+  @@index([tenantId])
+  @@index([email])
+  @@index([tenantId, role])
+}
+
+// ============================================================================
+// MENU ITEM (Navigation - self-referencing for nested menus)
+// ============================================================================
+
+model MenuItem {
+  id        String   @id @default(cuid())
+  tenantId  String
+  label     String
+  labelEn   String?
+  url       String
+  icon      String?
+  parentId  String?
+  order     Int      @default(0)
+  isVisible Boolean  @default(true)
+  target    String   @default("_self")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  tenant   Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  parent   MenuItem?  @relation("MenuChildren", fields: [parentId], references: [id])
+  children MenuItem[] @relation("MenuChildren")
+
+  @@index([tenantId])
+  @@index([parentId])
+  @@index([tenantId, order])
+}
+
+// ============================================================================
+// PAGE (Static pages with bilingual support)
+// ============================================================================
+
+model Page {
+  id              String    @id @default(cuid())
+  tenantId        String
+  slug            String
+  title           String
+  titleEn         String?
+  content         String
+  contentEn       String?
+  template        String    @default("default")
+  metaTitle       String?
+  metaDescription String?
+  featuredImage   String?
+  isPublished     Boolean   @default(false)
+  publishedAt     DateTime?
+  authorId        String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  author User   @relation("PageAuthor", fields: [authorId], references: [id])
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([tenantId, isPublished])
+  @@index([authorId])
+}
+
+// ============================================================================
+// NEWS (ข่าวสาร/ประชาสัมพันธ์)
+// ============================================================================
+
+// NewsCategory values: NEWS, ANNOUNCEMENT, PR
+
+model News {
+  id            String   @id @default(cuid())
+  tenantId      String
+  title         String
+  titleEn       String?
+  slug          String
+  excerpt       String?
+  excerptEn     String?
+  content       String
+  contentEn     String?
+  featuredImage String?
+  category      String   @default("NEWS") // NEWS, ANNOUNCEMENT, PR
+  isPinned      Boolean      @default(false)
+  isPublished   Boolean      @default(false)
+  publishedAt   DateTime?
+  viewCount     Int          @default(0)
+  authorId      String
+  tags          String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  author User   @relation("NewsAuthor", fields: [authorId], references: [id])
+
+  @@unique([tenantId, slug])
+  @@index([tenantId])
+  @@index([tenantId, category])
+  @@index([tenantId, isPublished])
+  @@index([tenantId, isPinned])
+  @@index([authorId])
+  @@index([publishedAt])
+}
+
+// ============================================================================
+// PROCUREMENT (จัดซื้อจัดจ้าง)
+// ============================================================================
+
+// ProcurementType values: BID, AUCTION, PURCHASE, HIRE
+// ProcurementStatus values: DRAFT, PUBLISHED, CLOSED
+
+model Procurement {
+  id          String   @id @default(cuid())
+  tenantId    String
+  title       String
+  description String?
+  type        String   @default("PURCHASE") // BID, AUCTION, PURCHASE, HIRE
+  status      String   @default("DRAFT")    // DRAFT, PUBLISHED, CLOSED
+  budget      Float?
+  documentUrl String?
+  startDate   DateTime?
+  endDate     DateTime?
+  publishedAt DateTime?
+  authorId    String
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  author User   @relation("ProcurementAuthor", fields: [authorId], references: [id])
+
+  @@index([tenantId])
+  @@index([tenantId, type])
+  @@index([tenantId, status])
+  @@index([authorId])
+  @@index([publishedAt])
+}
+
+// ============================================================================
+// BANNER (Hero banners / slideshow)
+// ============================================================================
+
+model Banner {
+  id         String    @id @default(cuid())
+  tenantId   String
+  title      String
+  titleEn    String?
+  subtitle   String?
+  subtitleEn String?
+  imageUrl   String
+  videoUrl   String?
+  linkUrl    String?
+  order      Int       @default(0)
+  isActive   Boolean   @default(true)
+  startDate  DateTime?
+  endDate    DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, isActive])
+  @@index([tenantId, order])
+}
+
+// ============================================================================
+// MEDIA (File/image management)
+// ============================================================================
+
+model Media {
+  id           String   @id @default(cuid())
+  tenantId     String
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  alt          String?
+  folder       String?
+  uploadedById String
+  createdAt    DateTime @default(now())
+
+  // Relations
+  tenant       Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  uploadedBy   User           @relation("MediaUploader", fields: [uploadedById], references: [id])
+  galleryImages GalleryImage[]
+
+  @@index([tenantId])
+  @@index([tenantId, folder])
+  @@index([uploadedById])
+  @@index([mimeType])
+}
+
+// ============================================================================
+// GALLERY (Photo galleries)
+// ============================================================================
+
+model Gallery {
+  id          String    @id @default(cuid())
+  tenantId    String
+  title       String
+  titleEn     String?
+  description String?
+  coverImage  String?
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  tenant Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  images GalleryImage[]
+
+  @@index([tenantId])
+  @@index([tenantId, isPublished])
+}
+
+model GalleryImage {
+  id        String @id @default(cuid())
+  galleryId String
+  mediaId   String
+  caption   String?
+  order     Int    @default(0)
+
+  // Relations
+  gallery Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@index([galleryId])
+  @@index([mediaId])
+  @@index([galleryId, order])
+}
+
+// ============================================================================
+// DOCUMENT (เอกสาร/ดาวน์โหลด)
+// ============================================================================
+
+model Document {
+  id            String    @id @default(cuid())
+  tenantId      String
+  title         String
+  category      String
+  fileUrl       String
+  fileSize      Int?
+  downloadCount Int       @default(0)
+  isPublished   Boolean   @default(false)
+  publishedAt   DateTime?
+  authorId      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  author User   @relation("DocumentAuthor", fields: [authorId], references: [id])
+
+  @@index([tenantId])
+  @@index([tenantId, category])
+  @@index([tenantId, isPublished])
+  @@index([authorId])
+}
+
+// ============================================================================
+// CONTACT SUBMISSION (ติดต่อเรา)
+// ============================================================================
+
+// ContactStatus values: NEW, READ, REPLIED, ARCHIVED
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  tenantId  String
+  name      String
+  email     String?
+  phone     String?
+  subject   String
+  message   String
+  status    String   @default("NEW") // NEW, READ, REPLIED, ARCHIVED
+  repliedAt DateTime?
+  createdAt DateTime      @default(now())
+
+  citizenId String?
+
+  // Relations
+  tenant  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  citizen Citizen? @relation(fields: [citizenId], references: [id])
+
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@index([citizenId])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// COMPLAINT (ร้องเรียน/ร้องทุกข์)
+// ============================================================================
+
+// ComplaintStatus values: SUBMITTED, RECEIVED, IN_PROGRESS, RESOLVED, REJECTED
+
+model Complaint {
+  id             String   @id @default(cuid())
+  tenantId       String
+  trackingNumber String   @unique
+  name           String
+  phone          String?
+  email          String?
+  category       String
+  subject        String
+  description    String
+  location       String?
+  attachmentUrl  String?
+  status         String   @default("SUBMITTED") // SUBMITTED, RECEIVED, IN_PROGRESS, RESOLVED, REJECTED
+  responseNote   String?
+  assignedToId   String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  citizenId      String?
+
+  // Relations
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  assignedTo User?    @relation("ComplaintAssignee", fields: [assignedToId], references: [id])
+  citizen    Citizen? @relation(fields: [citizenId], references: [id])
+
+  @@index([tenantId])
+  @@index([trackingNumber])
+  @@index([tenantId, status])
+  @@index([assignedToId])
+  @@index([citizenId])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// SITE CONFIG (Flexible key-value settings per tenant)
+// ============================================================================
+
+model SiteConfig {
+  id       String @id @default(cuid())
+  tenantId String
+  key      String
+  value    String
+  group    String @default("general")
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
+  @@index([tenantId, group])
+}
+
+// ============================================================================
+// VISITOR LOG (Analytics / สถิติผู้เข้าชม)
+// ============================================================================
+
+model VisitorLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  path      String
+  userAgent String?
+  ip        String?
+  referer   String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([tenantId, path])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// CITIZEN (Citizen/Resident profile for CDP)
+// ============================================================================
+
+model Citizen {
+  id                 String    @id @default(uuid())
+  tenantId           String
+  email              String?
+  phone              String?
+  name               String
+  avatar             String?
+  idCardLast4        String?
+  birthDate          DateTime?
+  address            String?
+  subdistrict        String?
+  district           String?
+  province           String?
+  postalCode         String?
+  isPhoneVerified    Boolean   @default(false)
+  isEmailVerified    Boolean   @default(false)
+  isActive           Boolean   @default(true)
+  lastLoginAt        DateTime?
+  loginCount         Int       @default(0)
+  consentMarketing   Boolean   @default(false)
+  consentDataCollection Boolean @default(true)
+  consentAt          DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  // Relations
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  socialAccounts     CitizenSocialAccount[]
+  activities         CitizenActivity[]
+  complaints         Complaint[]
+  contactSubmissions ContactSubmission[]
+  consents           CitizenConsent[]
+  notifications      Notification[]
+  notificationSubscriptions NotificationSubscription[]
+
+  @@index([tenantId])
+  @@index([email])
+  @@index([phone])
+  @@index([tenantId, isActive])
+}
+
+// ============================================================================
+// CITIZEN SOCIAL ACCOUNT (Linked social providers - LINE, Google, Facebook)
+// ============================================================================
+
+model CitizenSocialAccount {
+  id              String    @id @default(uuid())
+  citizenId       String
+  provider        String
+  providerId      String
+  providerEmail   String?
+  providerName    String?
+  providerAvatar  String?
+  accessToken     String?
+  refreshToken    String?
+  tokenExpiresAt  DateTime?
+  createdAt       DateTime  @default(now())
+
+  // Relations
+  citizen Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+  @@unique([citizenId, provider])
+  @@index([citizenId])
+  @@index([provider])
+}
+
+// ============================================================================
+// CITIZEN ACTIVITY (Track citizen interactions for CDP)
+// ============================================================================
+
+model CitizenActivity {
+  id        String   @id @default(uuid())
+  citizenId String
+  tenantId  String
+  type      String
+  action    String
+  metadata  String?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  citizen Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([citizenId])
+  @@index([tenantId])
+  @@index([type])
+  @@index([createdAt])
+  @@index([citizenId, type])
+  @@index([tenantId, type])
+}
+
+// ============================================================================
+// OTP VERIFICATION (OTP storage for authentication)
+// ============================================================================
+
+model OTPVerification {
+  id         String   @id @default(uuid())
+  identifier String
+  code       String
+  type       String
+  expiresAt  DateTime
+  isUsed     Boolean  @default(false)
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([identifier])
+  @@index([identifier, type])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// CITIZEN CONSENT (PDPA consent records)
+// ============================================================================
+
+model CitizenConsent {
+  id          String    @id @default(uuid())
+  citizenId   String
+  tenantId    String
+  consentType String
+  isGranted   Boolean
+  ipAddress   String?
+  grantedAt   DateTime
+  revokedAt   DateTime?
+  version     String
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  citizen Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([citizenId])
+  @@index([tenantId])
+  @@index([citizenId, consentType])
+  @@index([tenantId, consentType])
+}
+
+// ============================================================================
+// NOTIFICATION (การแจ้งเตือนสำหรับประชาชน)
+// ============================================================================
+
+model Notification {
+  id           String    @id @default(uuid())
+  citizenId    String
+  tenantId     String
+  type         String    // COMPLAINT_UPDATE, NEWS, ANNOUNCEMENT, SERVICE_STATUS, COMMUNITY_EVENT
+  title        String
+  message      String
+  isRead       Boolean   @default(false)
+  readAt       DateTime?
+  linkUrl      String?
+  linkEntity   String?   // e.g. "complaint", "news", "e-service"
+  linkEntityId String?   // ID of the related entity
+  createdAt    DateTime  @default(now())
+
+  // Relations
+  citizen Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([citizenId])
+  @@index([tenantId])
+  @@index([citizenId, isRead])
+  @@index([citizenId, type])
+  @@index([tenantId, type])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// NOTIFICATION SUBSCRIPTION (การตั้งค่าการแจ้งเตือน)
+// ============================================================================
+
+model NotificationSubscription {
+  id        String   @id @default(uuid())
+  citizenId String
+  tenantId  String
+  category  String   // NEWS_ANNOUNCEMENT, COMPLAINT_STATUS, E_SERVICE, COMMUNITY_EVENT
+  enabled   Boolean  @default(true)
+  channels  String   // JSON array: ["IN_APP", "EMAIL", "LINE"]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  citizen Citizen @relation(fields: [citizenId], references: [id], onDelete: Cascade)
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([citizenId, category])
+  @@index([citizenId])
+  @@index([tenantId])
+}

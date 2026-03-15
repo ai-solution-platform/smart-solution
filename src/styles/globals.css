@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --color-primary: #1e3a5f;
+  --color-primary-light: #2a4f7f;
+  --color-primary-dark: #152b47;
+  --color-secondary: #2c5f8a;
+  --color-secondary-light: #3a7ab0;
+  --color-secondary-dark: #1f4a6e;
+  --color-accent: #e8a838;
+  --color-accent-light: #f0bc5a;
+  --color-accent-dark: #c4902e;
+  --color-surface: #f8f9fa;
+  --color-surface-dark: #e9ecef;
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #4a4a6a;
+  --color-text-muted: #6c757d;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-error: #dc3545;
+  --color-info: #17a2b8;
+
+  --font-family-prompt: 'Prompt', sans-serif;
+  --font-family-sarabun: 'Sarabun', sans-serif;
+}
+
+:root {
+  --primary: #1e3a5f;
+  --primary-light: #2a4f7f;
+  --primary-dark: #152b47;
+  --secondary: #2c5f8a;
+  --secondary-light: #3a7ab0;
+  --secondary-dark: #1f4a6e;
+  --accent: #e8a838;
+  --accent-light: #f0bc5a;
+  --accent-dark: #c4902e;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Prompt', sans-serif;
+}
+
+body {
+  @apply text-text-primary bg-surface antialiased;
+  font-family: 'Prompt', sans-serif;
+  min-height: 100vh;
+}
+
+/* Accessibility: Focus styles */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary ring-2 ring-primary/30;
+}
+
+/* Skip to content link for accessibility */
+.skip-to-content {
+  @apply absolute -top-10 left-4 z-[9999] bg-primary text-white px-4 py-2 rounded-b-md transition-all;
+}
+
+.skip-to-content:focus {
+  @apply top-0;
+}
+
+/* Font size accessibility classes */
+.font-size-small {
+  font-size: 14px;
+}
+
+.font-size-medium {
+  font-size: 16px;
+}
+
+.font-size-large {
+  font-size: 18px;
+}
+
+.font-size-small h1 { font-size: 1.75rem; }
+.font-size-small h2 { font-size: 1.5rem; }
+.font-size-small h3 { font-size: 1.25rem; }
+
+.font-size-medium h1 { font-size: 2rem; }
+.font-size-medium h2 { font-size: 1.75rem; }
+.font-size-medium h3 { font-size: 1.5rem; }
+
+.font-size-large h1 { font-size: 2.25rem; }
+.font-size-large h2 { font-size: 2rem; }
+.font-size-large h3 { font-size: 1.75rem; }
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --primary: #0a1f3a;
+    --secondary: #1a3d5c;
+    --accent: #c4902e;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/40 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/60;
+}
+
+/* Print styles */
+@media print {
+  header, footer, nav, .chat-widget {
+    display: none !important;
+  }
+
+  body {
+    font-size: 12pt;
+    color: #000;
+    background: #fff;
+  }
+}
