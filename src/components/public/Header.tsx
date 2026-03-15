@@ -369,7 +369,7 @@ export default function Header({
                             <p className="text-xs text-gray-500 truncate">{citizen.email || citizen.phone}</p>
                           </div>
                           <Link
-                            href="/citizen/profile"
+                            href="/auth/profile"
                             className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
                             onClick={() => setCitizenMenuOpen(false)}
                           >
@@ -377,7 +377,7 @@ export default function Header({
                             โปรไฟล์ของฉัน
                           </Link>
                           <Link
-                            href="/citizen/complaints"
+                            href="/complaints"
                             className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
                             onClick={() => setCitizenMenuOpen(false)}
                           >
@@ -393,7 +393,7 @@ export default function Header({
                             บริการออนไลน์
                           </Link>
                           <Link
-                            href="/citizen/notifications"
+                            href="/notifications"
                             className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
                             onClick={() => setCitizenMenuOpen(false)}
                           >

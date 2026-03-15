@@ -217,7 +217,7 @@ export default function CitizenLoginPage() {
             </svg>
             <p>
               การเข้าสู่ระบบถือว่าคุณยินยอมตาม{' '}
-              <a href="/privacy-policy" className="text-blue-500 hover:underline">
+              <a href="/privacy" className="text-blue-500 hover:underline">
                 นโยบายความเป็นส่วนตัว
               </a>{' '}
               และ{' '}

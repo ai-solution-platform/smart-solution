@@ -306,7 +306,7 @@ export default function NotificationsPage() {
               เข้าสู่ระบบเพื่อดูการแจ้งเตือนและติดตามสถานะเรื่องร้องเรียนของคุณ
             </p>
             <Link
-              href="/citizen/login?returnUrl=%2Fnotifications"
+              href="/auth/login?returnUrl=%2Fnotifications"
               className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
               <LogIn className="w-5 h-5" />

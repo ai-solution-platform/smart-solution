@@ -382,7 +382,7 @@ export default function CitizenProfilePage() {
               </button>
             </label>
           </div>
-          <Link href="/privacy-policy" className="inline-block mt-4 text-blue-600 hover:underline text-sm">
+          <Link href="/privacy" className="inline-block mt-4 text-blue-600 hover:underline text-sm">
             อ่านนโยบายความเป็นส่วนตัวฉบับเต็ม
           </Link>
         </div>

@@ -168,7 +168,7 @@ export default function ConsentBanner() {
               </div>
               <p className="text-sm text-gray-600">
                 เว็บไซต์นี้ใช้คุกกี้เพื่อพัฒนาประสบการณ์การใช้งาน{' '}
-                <a href="/privacy-policy" className="text-blue-600 hover:underline">
+                <a href="/privacy" className="text-blue-600 hover:underline">
                   นโยบายความเป็นส่วนตัว
                 </a>
               </p>
