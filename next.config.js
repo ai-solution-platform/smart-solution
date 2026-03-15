@@ -1,30 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+
+  // Base path for GitHub Pages (repo name)
+  basePath: '/smart-website',
+
   reactStrictMode: true,
 
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**.supabase.co",
-      },
-      {
-        protocol: "https",
-        hostname: "**.cloudinary.com",
-      },
-      {
-        protocol: "https",
-        hostname: "**.amazonaws.com",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-      },
-    ],
+    unoptimized: true,
   },
 
-  // Enable trailing slashes for SEO consistency
-  trailingSlash: false,
+  // Trailing slashes for static hosting compatibility
+  trailingSlash: true,
 
   // Powered by header removal for security
   poweredByHeader: false,
