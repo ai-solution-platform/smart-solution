@@ -1,7 +1,7 @@
 import EServiceDetailClient from './EServiceDetailClient';
 
 export function generateStaticParams() {
-  return ['tax-payment', 'building-permit', 'queue-booking', 'report-issue', 'information-request'].map(
+  return ['tax-payment', 'building-permit', 'queue-booking', 'report-issue', 'information-request', 'civil-registration'].map(
     (service) => ({ service })
   );
 }

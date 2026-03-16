@@ -247,6 +247,46 @@ export default function CivilRegistrationPage() {
           })}
         </div>
 
+        {/* Online Request CTA */}
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 mb-12 text-white">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h3 className="text-2xl font-bold mb-2">ยื่นคำร้องออนไลน์</h3>
+              <p className="text-purple-100">
+                นัดหมายล่วงหน้าผ่านระบบออนไลน์ ลดเวลารอคิว เตรียมเอกสารได้ก่อนมาติดต่อ
+              </p>
+            </div>
+            <Link
+              href="/e-service/civil-registration"
+              className="shrink-0 bg-white text-purple-700 px-8 py-3.5 rounded-xl font-semibold hover:bg-purple-50 transition-colors flex items-center gap-2 shadow-lg"
+            >
+              <PenLine className="w-5 h-5" />
+              ยื่นคำร้องออนไลน์
+            </Link>
+          </div>
+        </div>
+
+        {/* Status Tracking */}
+        <div className="bg-white rounded-xl shadow-md border border-gray-100 p-6 md:p-8 mb-12">
+          <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <Clock className="w-5 h-5 text-blue-600" />
+            ติดตามสถานะคำร้อง
+          </h3>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="text"
+              placeholder="กรอกหมายเลขอ้างอิง เช่น REG-2568-12345"
+              className="flex-1 px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              onClick={() => alert('ระบบ Demo: คำร้อง REG-2568-12345 สถานะ: กำลังดำเนินการ (เจ้าหน้าที่ตรวจสอบเอกสารแล้ว รอนัดหมาย)')}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium shrink-0"
+            >
+              ตรวจสอบสถานะ
+            </button>
+          </div>
+        </div>
+
         {/* Contact & Service Hours */}
         <div className="grid md:grid-cols-2 gap-6">
           {/* Contact Info */}

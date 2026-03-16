@@ -74,10 +74,18 @@ const serviceMeta: Record<string, ServiceMeta> = {
     color: 'text-amber-600',
     bgColor: 'bg-amber-50',
   },
+  'civil-registration': {
+    slug: 'civil-registration',
+    title: 'ทะเบียนราษฎร',
+    description: 'บริการด้านทะเบียนราษฎร แจ้งเกิด แจ้งตาย แจ้งย้ายที่อยู่',
+    icon: FileSearch,
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-50',
+  },
 };
 
 // Services that don't require auth
-const publicServices = ['report-issue'];
+const publicServices = ['report-issue', 'civil-registration'];
 
 // --- Component ---
 
@@ -230,6 +238,11 @@ export default function EServiceDetailClient() {
         if (!formData.requestDetail?.trim()) newErrors.requestDetail = 'กรุณาระบุข้อมูลที่ต้องการ';
         if (!formData.purpose?.trim()) newErrors.purpose = 'กรุณาระบุวัตถุประสงค์';
         break;
+      case 'civil-registration':
+        if (!formData.idCard?.trim()) newErrors.idCard = 'กรุณากรอกเลขบัตรประชาชน';
+        if (!formData.serviceType) newErrors.serviceType = 'กรุณาเลือกประเภทบริการ';
+        if (!formData.currentAddress?.trim()) newErrors.currentAddress = 'กรุณากรอกที่อยู่';
+        break;
     }
 
     setErrors(newErrors);
@@ -242,35 +255,19 @@ export default function EServiceDetailClient() {
 
     setSubmitting(true);
     setSubmitError('');
-    try {
-      const res = await fetch('/api/e-service', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          serviceType: serviceSlug,
-          formData,
-          citizenId: citizen?.id,
-        }),
-      });
 
-      if (res.ok) {
-        const data = await res.json();
-        setReferenceNumber(data.referenceNumber || 'SRV-XXXX-XXXXX');
-        setSubmitted(true);
-      } else {
-        const data = await res.json().catch(() => null);
-        setSubmitError(
-          data?.error || data?.errors?.join(', ') || 'เกิดข้อผิดพลาดในการส่งคำขอ กรุณาลองใหม่อีกครั้ง'
-        );
-      }
-    } catch {
-      setSubmitError('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบอินเทอร์เน็ตและลองใหม่');
-    } finally {
-      setSubmitting(false);
-    }
+    // Demo mode: simulate API call with mock response
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    const prefix = serviceSlug === 'tax-payment' ? 'TAX' :
+                   serviceSlug === 'building-permit' ? 'BLD' :
+                   serviceSlug === 'queue-booking' ? 'QUE' :
+                   serviceSlug === 'report-issue' ? 'RPT' :
+                   serviceSlug === 'civil-registration' ? 'REG' :
+                   serviceSlug === 'information-request' ? 'INF' : 'SRV';
+    const num = String(Math.floor(Math.random() * 90000) + 10000);
+    setReferenceNumber(`${prefix}-2568-${num}`);
+    setSubmitted(true);
+    setSubmitting(false);
   };
 
   const IconComponent = meta.icon;
@@ -572,6 +569,47 @@ export default function EServiceDetailClient() {
               { value: 'pickup', label: 'มารับด้วยตนเอง' },
               { value: 'mail', label: 'ส่งทางไปรษณีย์' },
             ])}
+          </>
+        );
+
+      case 'civil-registration':
+        return (
+          <>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {renderField('ชื่อ-นามสกุล', 'name', 'text', undefined, 'กรอกชื่อ-นามสกุล')}
+              {renderField('เลขบัตรประชาชน', 'idCard', 'text', undefined, 'X-XXXX-XXXXX-XX-X')}
+            </div>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {renderField('เบอร์โทรศัพท์', 'phone', 'tel', undefined, '08X-XXX-XXXX')}
+              {renderField('อีเมล', 'email', 'email', undefined, 'example@email.com')}
+            </div>
+            {renderField('ประเภทบริการ', 'serviceType', 'select', [
+              { value: 'birth', label: 'แจ้งเกิด' },
+              { value: 'death', label: 'แจ้งตาย' },
+              { value: 'move-in', label: 'แจ้งย้ายเข้า' },
+              { value: 'move-out', label: 'แจ้งย้ายออก' },
+              { value: 'name-change', label: 'เปลี่ยนชื่อ-สกุล' },
+              { value: 'copy', label: 'คัดสำเนาทะเบียนบ้าน' },
+              { value: 'correction', label: 'แก้ไขรายการในทะเบียนบ้าน' },
+            ])}
+            {renderField('ที่อยู่ปัจจุบัน (ตามทะเบียนบ้าน)', 'currentAddress', 'textarea', undefined, 'เลขที่ ซอย ถนน ตำบล อำเภอ จังหวัด รหัสไปรษณีย์')}
+            {renderField('รายละเอียดเพิ่มเติม', 'details', 'textarea', undefined, 'ระบุรายละเอียดเพิ่มเติม เช่น กรณีแจ้งย้ายให้ระบุที่อยู่ใหม่')}
+            {renderField('วันที่ต้องการนัดหมาย', 'appointmentDate', 'date', undefined, undefined, 'เลือกวันจันทร์-ศุกร์ เจ้าหน้าที่จะติดต่อกลับเพื่อยืนยัน')}
+            {/* Attachments */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                แนบเอกสาร (บัตรประชาชน, สำเนาทะเบียนบ้าน)
+              </label>
+              <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-lg px-4 py-4 cursor-pointer hover:border-blue-300 hover:bg-blue-50/50 transition-colors">
+                <Upload className="w-5 h-5 text-gray-400" />
+                <span className="text-sm text-gray-500">คลิกเพื่อแนบไฟล์ (PDF, JPG, PNG)</span>
+                <input type="file" className="hidden" multiple accept=".pdf,.jpg,.jpeg,.png" />
+              </label>
+              <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                <Info className="w-3 h-3" />
+                แนะนำให้แนบสำเนาบัตรประชาชนและสำเนาทะเบียนบ้านเพื่อความรวดเร็ว
+              </p>
+            </div>
           </>
         );
 

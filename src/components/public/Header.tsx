@@ -324,18 +324,18 @@ export default function Header({
               {!authLoading && (
                 <>
                   {isLoggedIn && citizen ? (
-                    <div className="relative" ref={citizenMenuRef}>
+                    <div className="relative flex items-center gap-2" ref={citizenMenuRef}>
                       {/* Notification Bell */}
-                      <button
-                        className="relative mr-2 hover:text-secondary-light transition-colors"
+                      <Link
+                        href="/notifications"
+                        className="relative hover:text-secondary-light transition-colors p-1"
                         aria-label="การแจ้งเตือน"
-                        onClick={() => (window.location.href = '/citizen/notifications')}
                       >
                         <Bell className="w-3.5 h-3.5" />
-                        <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-[8px] flex items-center justify-center font-bold">
-                          0
+                        <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-red-500 rounded-full text-[8px] flex items-center justify-center font-bold leading-none">
+                          3
                         </span>
-                      </button>
+                      </Link>
 
                       {/* Citizen Avatar + Name */}
                       <button

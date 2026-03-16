@@ -66,8 +66,8 @@ const services: ServiceItem[] = [
     description: 'บริการด้านทะเบียนราษฎร แจ้งเกิด แจ้งตาย แจ้งย้ายที่อยู่',
     color: 'text-purple-600',
     bgColor: 'bg-purple-50',
-    active: false,
-    requiresAuth: true,
+    active: true,
+    requiresAuth: false,
   },
   {
     id: '4',
@@ -131,7 +131,7 @@ export default function EServicePage() {
   const handleServiceClick = (service: ServiceItem) => {
     if (!service.active) return;
     if (service.requiresAuth && !isLoggedIn) {
-      router.push(`/citizen/login?returnUrl=${encodeURIComponent(`/e-service/${service.slug}`)}`);
+      router.push(`/auth/login?returnUrl=${encodeURIComponent(`/e-service/${service.slug}`)}`);
       return;
     }
     router.push(`/e-service/${service.slug}`);
