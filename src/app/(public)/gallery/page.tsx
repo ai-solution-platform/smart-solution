@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   Camera,
   X,
@@ -156,7 +157,7 @@ export default function GalleryPage() {
           </h1>
           <p className="text-blue-100 text-lg">รวมภาพกิจกรรม โครงการ และการดำเนินงานต่าง ๆ ของเทศบาล</p>
           <div className="flex items-center gap-2 mt-4 text-sm text-blue-200">
-            <a href="/" className="hover:text-white">หน้าแรก</a>
+            <Link href="/" className="hover:text-white">หน้าแรก</Link>
             <span>/</span>
             <span>คลังภาพ</span>
           </div>

@@ -217,13 +217,13 @@ export default function CitizenLoginPage() {
             </svg>
             <p>
               การเข้าสู่ระบบถือว่าคุณยินยอมตาม{' '}
-              <a href="/privacy" className="text-blue-500 hover:underline">
+              <Link href="/privacy" className="text-blue-500 hover:underline">
                 นโยบายความเป็นส่วนตัว
-              </a>{' '}
+              </Link>{' '}
               และ{' '}
-              <a href="/terms" className="text-blue-500 hover:underline">
+              <Link href="/terms" className="text-blue-500 hover:underline">
                 เงื่อนไขการใช้งาน
-              </a>{' '}
+              </Link>{' '}
               ตาม พ.ร.บ.คุ้มครองข้อมูลส่วนบุคคล (PDPA)
             </p>
           </div>

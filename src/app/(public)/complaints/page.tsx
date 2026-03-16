@@ -19,6 +19,7 @@ import {
   ChevronRight,
   Eye,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useCitizenAuth } from '@/hooks/useCitizenAuth';
 import AuthPrompt from '@/components/shared/AuthPrompt';
 
@@ -280,7 +281,7 @@ export default function ComplaintsPage() {
               </h1>
               <p className="text-blue-100 text-lg">ช่องทางรับเรื่องร้องเรียน ร้องทุกข์ และติดตามสถานะ</p>
               <div className="flex items-center gap-2 mt-4 text-sm text-blue-200">
-                <a href="/" className="hover:text-white">หน้าแรก</a>
+                <Link href="/" className="hover:text-white">หน้าแรก</Link>
                 <span>/</span>
                 <span>ร้องเรียน</span>
               </div>
@@ -734,13 +735,13 @@ export default function ComplaintsPage() {
 
                 {/* Full detail link */}
                 <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                  <a
+                  <Link
                     href={`/complaints/track?number=${trackingResult.trackingNumber}`}
                     className="text-blue-600 hover:text-blue-700 text-sm font-medium inline-flex items-center gap-1"
                   >
                     ดูรายละเอียดเพิ่มเติม
                     <ChevronRight className="w-4 h-4" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}
@@ -803,13 +804,13 @@ export default function ComplaintsPage() {
                             {complaint.category} | {formatDate(complaint.createdAt)}
                           </p>
                         </div>
-                        <a
+                        <Link
                           href={`/complaints/track?number=${complaint.trackingNumber}`}
                           className="shrink-0 text-blue-600 hover:text-blue-700 p-2"
                           title="ดูรายละเอียด"
                         >
                           <Eye className="w-5 h-5" />
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   ))}

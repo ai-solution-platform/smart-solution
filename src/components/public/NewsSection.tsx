@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Calendar, ArrowRight } from 'lucide-react';
 
 interface NewsItem {
@@ -96,12 +97,12 @@ export default function NewsSection() {
             </h2>
             <p className="text-gray-500">ติดตามข่าวสารล่าสุดจากเทศบาลตำบลสมาร์ทซิตี้</p>
           </div>
-          <a
+          <Link
             href="/news"
             className="inline-flex items-center gap-2 mt-4 md:mt-0 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
           >
             ดูทั้งหมด <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {/* Category Tabs */}

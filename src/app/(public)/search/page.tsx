@@ -230,7 +230,7 @@ export default function SearchPage() {
             </button>
           </form>
           <div className="flex items-center gap-2 mt-6 text-sm text-blue-200 justify-center">
-            <a href="/" className="hover:text-white">หน้าแรก</a>
+            <Link href="/" className="hover:text-white">หน้าแรก</Link>
             <span>/</span>
             <span>ค้นหา</span>
           </div>

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
   Receipt,
   Building2,
@@ -27,7 +28,7 @@ const quickLinks: QuickLinkItem[] = [
     title: 'ชำระภาษี',
     description: 'ชำระภาษีออนไลน์',
     icon: Receipt,
-    href: '#',
+    href: '/e-service/tax-payment',
     color: 'from-blue-500 to-blue-600',
   },
   {
@@ -35,7 +36,7 @@ const quickLinks: QuickLinkItem[] = [
     title: 'ขออนุญาตก่อสร้าง',
     description: 'ยื่นคำขอออนไลน์',
     icon: Building2,
-    href: '#',
+    href: '/e-service/building-permit',
     color: 'from-emerald-500 to-emerald-600',
   },
   {
@@ -43,7 +44,7 @@ const quickLinks: QuickLinkItem[] = [
     title: 'ทะเบียนราษฎร',
     description: 'งานทะเบียนต่างๆ',
     icon: Users,
-    href: '#',
+    href: '/civil-registration',
     color: 'from-purple-500 to-purple-600',
   },
   {
@@ -51,7 +52,7 @@ const quickLinks: QuickLinkItem[] = [
     title: 'ศูนย์ดำรงธรรม',
     description: 'รับเรื่องร้องเรียน',
     icon: Scale,
-    href: '#',
+    href: '/damrongtham',
     color: 'from-rose-500 to-rose-600',
   },
   {
@@ -75,7 +76,7 @@ const quickLinks: QuickLinkItem[] = [
     title: 'e-Service',
     description: 'บริการออนไลน์',
     icon: Globe,
-    href: '#',
+    href: '/e-service',
     color: 'from-indigo-500 to-indigo-600',
   },
   {
@@ -83,7 +84,7 @@ const quickLinks: QuickLinkItem[] = [
     title: 'ข้อมูลเปิดภาครัฐ',
     description: 'Open Government Data',
     icon: Database,
-    href: '#',
+    href: '/open-data',
     color: 'from-teal-500 to-teal-600',
   },
 ];
@@ -103,7 +104,7 @@ export default function QuickLinks() {
           {quickLinks.map((item) => {
             const Icon = item.icon;
             return (
-              <a
+              <Link
                 key={item.id}
                 href={item.href}
                 className="group relative bg-white rounded-xl shadow-card hover:shadow-card-hover p-6 text-center transition-all duration-300 hover:-translate-y-1 border border-gray-100"
@@ -119,7 +120,7 @@ export default function QuickLinks() {
                 <p className="text-xs text-gray-400 hidden md:block">
                   {item.description}
                 </p>
-              </a>
+              </Link>
             );
           })}
         </div>

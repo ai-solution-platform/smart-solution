@@ -16,6 +16,7 @@ import {
   User,
   LogOut,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useCitizenAuth } from '@/hooks/useCitizenAuth';
 import AuthPrompt from '@/components/shared/AuthPrompt';
 
@@ -214,9 +215,9 @@ function ComplaintTrackContent() {
               </h1>
               <p className="text-blue-100">ตรวจสอบความคืบหน้าเรื่องร้องเรียนของคุณ</p>
               <div className="flex items-center gap-2 mt-3 text-sm text-blue-200">
-                <a href="/" className="hover:text-white">หน้าแรก</a>
+                <Link href="/" className="hover:text-white">หน้าแรก</Link>
                 <ChevronRight className="w-3 h-3" />
-                <a href="/complaints" className="hover:text-white">ร้องเรียน</a>
+                <Link href="/complaints" className="hover:text-white">ร้องเรียน</Link>
                 <ChevronRight className="w-3 h-3" />
                 <span>ติดตามสถานะ</span>
               </div>
@@ -288,12 +289,12 @@ function ComplaintTrackContent() {
           <div className="bg-red-50 border border-red-100 rounded-xl p-6 text-center mb-8">
             <XCircle className="w-10 h-10 text-red-400 mx-auto mb-2" />
             <p className="text-red-600">{error}</p>
-            <a
+            <Link
               href="/complaints"
               className="text-sm text-red-500 hover:underline mt-2 inline-block"
             >
               กลับไปหน้าร้องเรียน
-            </a>
+            </Link>
           </div>
         )}
 
@@ -512,13 +513,13 @@ function ComplaintTrackContent() {
 
         {/* Back link */}
         <div className="mt-8 text-center">
-          <a
+          <Link
             href="/complaints"
             className="text-blue-600 hover:text-blue-700 text-sm font-medium inline-flex items-center gap-1"
           >
             <MessageSquareWarning className="w-4 h-4" />
             กลับไปหน้าร้องเรียน
-          </a>
+          </Link>
         </div>
       </div>
     </div>

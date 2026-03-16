@@ -17,6 +17,7 @@ import {
   LogIn,
   History,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useCitizenAuth } from '@/hooks/useCitizenAuth';
 import AuthPrompt from '@/components/shared/AuthPrompt';
 
@@ -206,9 +207,9 @@ export default function ContactPage() {
           <h1 className="text-3xl md:text-4xl font-bold mb-4">ติดต่อเรา</h1>
           <p className="text-blue-100 text-lg">ช่องทางการติดต่อเทศบาลตำบลสมาร์ทซิตี้</p>
           <div className="flex items-center gap-2 mt-4 text-sm text-blue-200">
-            <a href="/" className="hover:text-white">
+            <Link href="/" className="hover:text-white">
               หน้าแรก
-            </a>
+            </Link>
             <span>/</span>
             <span>ติดต่อเรา</span>
           </div>

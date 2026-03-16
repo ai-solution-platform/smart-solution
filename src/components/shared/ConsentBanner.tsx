@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 
 interface ConsentSettings {
   necessary: boolean;
@@ -168,9 +169,9 @@ export default function ConsentBanner() {
               </div>
               <p className="text-sm text-gray-600">
                 เว็บไซต์นี้ใช้คุกกี้เพื่อพัฒนาประสบการณ์การใช้งาน{' '}
-                <a href="/privacy" className="text-blue-600 hover:underline">
+                <Link href="/privacy" className="text-blue-600 hover:underline">
                   นโยบายความเป็นส่วนตัว
-                </a>
+                </Link>
               </p>
             </div>
             <div className="flex gap-3 w-full sm:w-auto">

@@ -339,10 +339,10 @@ export default function NotificationsPage() {
                 <h3 className="font-semibold text-gray-900 text-sm">{title || 'หัวข้อการแจ้งเตือน'}</h3>
                 <p className="text-sm text-gray-600 whitespace-pre-wrap">{message || 'ข้อความการแจ้งเตือน...'}</p>
                 {relatedLink && (
-                  <a href="#" className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline">
+                  <span className="inline-flex items-center gap-1 text-xs text-blue-600 cursor-pointer hover:underline">
                     <LinkIcon className="w-3 h-3" />
                     ดูรายละเอียด
-                  </a>
+                  </span>
                 )}
               </div>
               <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
@@ -445,10 +445,10 @@ export default function NotificationsPage() {
                   <h3 className="font-bold text-gray-900">{title}</h3>
                   <p className="text-sm text-gray-700 whitespace-pre-wrap">{message}</p>
                   {relatedLink && (
-                    <a href="#" className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline">
+                    <span className="inline-flex items-center gap-1 text-sm text-blue-600 cursor-pointer hover:underline">
                       <LinkIcon className="w-4 h-4" />
                       {relatedLink}
-                    </a>
+                    </span>
                   )}
                 </div>
                 <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">

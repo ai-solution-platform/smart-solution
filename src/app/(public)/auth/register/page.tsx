@@ -424,9 +424,9 @@ export default function CitizenRegisterPage() {
                     <span className="text-base text-gray-700">
                       <span className="text-red-500">*</span>{' '}
                       ยินยอมให้เทศบาลเก็บข้อมูลเพื่อการให้บริการ ตาม{' '}
-                      <a href="/privacy" className="text-blue-600 hover:underline">
+                      <Link href="/privacy" className="text-blue-600 hover:underline">
                         นโยบายความเป็นส่วนตัว
-                      </a>
+                      </Link>
                     </span>
                   </label>
                   <label className="flex items-start gap-3 cursor-pointer">

@@ -27,7 +27,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="text-3xl md:text-4xl font-bold mb-4">นโยบายความเป็นส่วนตัว</h1>
           <p className="text-blue-100 text-lg">Privacy Policy</p>
           <div className="flex items-center gap-2 mt-4 text-sm text-blue-200">
-            <a href="/" className="hover:text-white">หน้าแรก</a>
+            <Link href="/" className="hover:text-white">หน้าแรก</Link>
             <span>/</span>
             <span>นโยบายความเป็นส่วนตัว</span>
           </div>

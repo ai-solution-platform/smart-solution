@@ -14,6 +14,7 @@ import {
   Clock,
   CheckCircle,
 } from 'lucide-react';
+import Link from 'next/link';
 import { useCitizenAuth } from '@/hooks/useCitizenAuth';
 import AuthPrompt from '@/components/shared/AuthPrompt';
 
@@ -297,9 +298,9 @@ export default function DownloadsPage() {
           </h1>
           <p className="text-blue-100 text-lg">ดาวน์โหลดแบบฟอร์ม เอกสาร คู่มือ และรายงานต่าง ๆ</p>
           <div className="flex items-center gap-2 mt-4 text-sm text-blue-200">
-            <a href="/" className="hover:text-white">
+            <Link href="/" className="hover:text-white">
               หน้าแรก
-            </a>
+            </Link>
             <span>/</span>
             <span>ดาวน์โหลด</span>
           </div>

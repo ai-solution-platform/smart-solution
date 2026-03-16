@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
           <h1 className="text-3xl md:text-4xl font-bold mb-4">ข้อกำหนดและเงื่อนไขการใช้บริการ</h1>
           <p className="text-blue-100 text-lg">Terms of Service</p>
           <div className="flex items-center gap-2 mt-4 text-sm text-blue-200">
-            <a href="/" className="hover:text-white">หน้าแรก</a>
+            <Link href="/" className="hover:text-white">หน้าแรก</Link>
             <span>/</span>
             <span>ข้อกำหนดและเงื่อนไข</span>
           </div>

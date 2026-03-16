@@ -279,17 +279,17 @@ export default function ProcurementPage() {
         {/* Desktop Table */}
         <div className="hidden lg:block bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden mb-8">
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600 w-12">ลำดับ</th>
+                  <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600 w-14">ลำดับ</th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">ชื่อโครงการ</th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600 w-28">ประเภท</th>
                   <th className="text-right px-4 py-3 text-sm font-semibold text-gray-600 w-36">วงเงิน (บาท)</th>
                   <th className="text-center px-4 py-3 text-sm font-semibold text-gray-600 w-28">วันที่ประกาศ</th>
                   <th className="text-center px-4 py-3 text-sm font-semibold text-gray-600 w-28">วันสิ้นสุด</th>
-                  <th className="text-center px-4 py-3 text-sm font-semibold text-gray-600 w-24">สถานะ</th>
-                  <th className="text-center px-4 py-3 text-sm font-semibold text-gray-600 w-20">TOR</th>
+                  <th className="text-center px-4 py-3 text-sm font-semibold text-gray-600 w-[100px] min-w-[100px]">สถานะ</th>
+                  <th className="text-center px-4 py-3 text-sm font-semibold text-gray-600 w-16">TOR</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -298,9 +298,9 @@ export default function ProcurementPage() {
                     <td className="px-4 py-3 text-sm text-gray-500">
                       {(currentPage - 1) * ITEMS_PER_PAGE + i + 1}
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-800 font-medium">{item.title}</td>
+                    <td className="px-4 py-3 text-sm text-gray-800 font-medium truncate">{item.title}</td>
                     <td className="px-4 py-3">
-                      <span className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">
+                      <span className="inline-block whitespace-nowrap bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">
                         {item.typeLabel}
                       </span>
                     </td>
@@ -311,7 +311,7 @@ export default function ProcurementPage() {
                     <td className="px-4 py-3 text-sm text-gray-500 text-center">{item.endDate}</td>
                     <td className="px-4 py-3 text-center">
                       <span
-                        className={`text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(
+                        className={`inline-block whitespace-nowrap text-xs px-2 py-1 rounded-full font-medium ${getStatusColor(
                           item.status
                         )}`}
                       >
