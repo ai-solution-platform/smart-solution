@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Megaphone } from 'lucide-react';
 
 const announcements = [
@@ -41,12 +42,12 @@ export default function AnnouncementBar() {
         </div>
 
         {/* Link */}
-        <a
+        <Link
           href="/announcements"
           className="flex-shrink-0 ml-4 text-xs font-semibold bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition-colors whitespace-nowrap"
         >
           ดูทั้งหมด
-        </a>
+        </Link>
       </div>
 
       <style jsx>{`

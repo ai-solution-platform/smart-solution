@@ -1,10 +1,28 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { CitizenProfile } from '@/types/citizen';
 
-const TOKEN_KEY = 'citizen-auth-token';
-const PROFILE_KEY = 'citizen-profile';
+// Demo mode: always return a mock logged-in citizen
+// This allows the static demo site to show full UX without real auth
+const DEMO_CITIZEN: CitizenProfile = {
+  id: 'demo-citizen-001',
+  name: 'สมชาย ตัวอย่าง',
+  email: 'somchai@example.com',
+  phone: '081-234-5678',
+  avatar: null,
+  idCardLast4: null,
+  address: '999 ถ.เทศบาล 1 ต.สมาร์ทซิตี้ อ.เมือง',
+  birthDate: null,
+  isActive: true,
+  linkedProviders: [],
+  tenantId: 'demo-tenant',
+  phoneVerified: true,
+  emailVerified: true,
+  consentRecords: [],
+  createdAt: new Date('2025-01-01'),
+  updatedAt: new Date('2025-01-01'),
+};
 
 interface UseCitizenAuthReturn {
   isLoggedIn: boolean;
@@ -17,122 +35,31 @@ interface UseCitizenAuthReturn {
 }
 
 export function useCitizenAuth(): UseCitizenAuthReturn {
-  const [citizen, setCitizen] = useState<CitizenProfile | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load stored session on mount
-  useEffect(() => {
-    try {
-      const storedToken = localStorage.getItem(TOKEN_KEY);
-      const storedProfile = localStorage.getItem(PROFILE_KEY);
-
-      if (storedToken && storedProfile) {
-        setToken(storedToken);
-        setCitizen(JSON.parse(storedProfile));
-      }
-    } catch {
-      // Clear corrupted data
-      try {
-        localStorage.removeItem(TOKEN_KEY);
-        localStorage.removeItem(PROFILE_KEY);
-      } catch {
-        // localStorage unavailable
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const [citizen, setCitizen] = useState<CitizenProfile>(DEMO_CITIZEN);
 
   const logout = useCallback(() => {
-    setToken(null);
-    setCitizen(null);
-    try {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(PROFILE_KEY);
-    } catch {
-      // localStorage unavailable
-    }
+    // In demo mode, just reset to demo citizen
+    setCitizen(DEMO_CITIZEN);
   }, []);
 
-  // Auto-refresh profile when token exists
-  useEffect(() => {
-    if (!token) return;
-
-    const refreshProfile = async () => {
-      try {
-        const res = await fetch('/api/citizen/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setCitizen(data.citizen);
-          localStorage.setItem(PROFILE_KEY, JSON.stringify(data.citizen));
-        } else if (res.status === 401) {
-          // Token expired
-          logout();
-        }
-      } catch {
-        // Silently fail - keep cached profile
-      }
-    };
-
-    refreshProfile();
-    // Refresh every 5 minutes
-    const interval = setInterval(refreshProfile, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [token, logout]);
-
-  const login = useCallback(async (newToken: string) => {
-    setIsLoading(true);
-    try {
-      const res = await fetch('/api/citizen/profile', {
-        headers: { Authorization: `Bearer ${newToken}` },
-      });
-
-      if (!res.ok) {
-        throw new Error('Failed to fetch profile');
-      }
-
-      const data = await res.json();
-      setToken(newToken);
-      setCitizen(data.citizen);
-      try {
-        localStorage.setItem(TOKEN_KEY, newToken);
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(data.citizen));
-      } catch {
-        // localStorage unavailable
-      }
-    } catch (err) {
-      console.error('Login failed:', err);
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
+  const login = useCallback(async () => {
+    setCitizen(DEMO_CITIZEN);
   }, []);
 
   const updateProfile = useCallback(
     (updates: Partial<CitizenProfile>) => {
-      if (!citizen) return;
-      const updated = { ...citizen, ...updates };
-      setCitizen(updated);
-      try {
-        localStorage.setItem(PROFILE_KEY, JSON.stringify(updated));
-      } catch {
-        // localStorage unavailable
-      }
+      setCitizen((prev) => ({ ...prev, ...updates }));
     },
-    [citizen]
+    []
   );
 
   return {
-    isLoggedIn: !!citizen && !!token,
-    isLoading,
+    isLoggedIn: true,
+    isLoading: false,
     citizen,
     login,
     logout,
     updateProfile,
-    token,
+    token: 'demo-token',
   };
 }

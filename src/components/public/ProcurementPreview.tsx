@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { FileText, ArrowRight, Clock } from 'lucide-react';
 
 interface ProcurementItem {
@@ -88,12 +89,12 @@ export default function ProcurementPreview() {
             </h2>
             <p className="text-gray-500">ประกาศจัดซื้อจัดจ้างและราคากลาง</p>
           </div>
-          <a
+          <Link
             href="/procurement"
             className="inline-flex items-center gap-2 mt-4 md:mt-0 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
           >
             ดูทั้งหมด <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {/* Table */}
@@ -109,7 +110,7 @@ export default function ProcurementPreview() {
 
           {/* Rows */}
           {demoProcurements.map((item, index) => (
-            <a
+            <Link
               key={item.id}
               href={item.href}
               className={`block md:grid md:grid-cols-12 gap-4 px-6 py-4 hover:bg-blue-50/50 transition-colors ${
@@ -161,7 +162,7 @@ export default function ProcurementPreview() {
                   {item.status === 'open' ? 'เปิดรับ' : 'ปิดรับ'}
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

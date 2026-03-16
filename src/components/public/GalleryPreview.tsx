@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { X, ChevronLeft, ChevronRight, Camera, ArrowRight } from 'lucide-react';
 
 interface GalleryImage {
@@ -77,12 +78,12 @@ export default function GalleryPreview() {
             </h2>
             <p className="text-gray-500">รวมภาพกิจกรรมและโครงการต่างๆ ของเทศบาล</p>
           </div>
-          <a
+          <Link
             href="/gallery"
             className="hidden md:inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold transition-colors"
           >
             ดูอัลบั้มทั้งหมด <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
 
         {/* Grid */}
@@ -110,12 +111,12 @@ export default function GalleryPreview() {
 
         {/* Mobile link */}
         <div className="mt-6 text-center md:hidden">
-          <a
+          <Link
             href="/gallery"
             className="inline-flex items-center gap-2 text-blue-600 font-semibold"
           >
             ดูอัลบั้มทั้งหมด <ArrowRight className="w-4 h-4" />
-          </a>
+          </Link>
         </div>
       </div>
 
